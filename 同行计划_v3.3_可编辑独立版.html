@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+  
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>同行计划 · 完整方案 v3.3(可编辑版)</title>
+<style>
+  /* ---------------- 色板 A 温润书卷型 ---------------- */
+  :root {
+    --bg:        #F5EFE6;   /* 浅暖褐底 */
+    --bg-card:   #FFFFFF;
+    --bg-soft:   #EFE7D8;
+    --ink:       #5C4A3A;   /* 主色 深褐 */
+    --ink-dark:  #3D2F22;
+    --accent:    #D97757;   /* 强调 落日橙 */
+    --accent-soft:#F4D9C7;
+    --green:     #6B7F5C;   /* 辅助 苔藓绿 */
+    --green-soft:#C9D2BD;
+    --text:      #2A2218;
+    --text-mute: #6B5F50;
+    --text-light:#8B8680;
+    --divider:   #D4C8B5;
+  }
+
+  /* ---------------- 基础 ---------------- */
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  body { padding: 0; }
+
+  /* 顶部导航 */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(245, 239, 230, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--divider);
+    padding: 12px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px;
+  }
+  .nav .brand { font-weight: 600; color: var(--ink); letter-spacing: 4px; }
+  .nav .brand .v { color: var(--accent); margin-left: 8px; font-style: italic; }
+  .nav .toc {
+    display: flex; gap: 4px; flex-wrap: wrap;
+  }
+  .nav .toc a {
+    color: var(--text-mute); text-decoration: none; padding: 4px 8px;
+    border-radius: 4px; font-size: 12px; transition: all .2s;
+  }
+  .nav .toc a:hover { background: var(--accent-soft); color: var(--ink); }
+
+  /* 每节容器 */
+  section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 40px;
+    border-bottom: 1px dashed var(--divider);
+  }
+  section:last-of-type { border-bottom: none; }
+
+  /* 章节顶部标识 */
+  .chap-badge { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+  .chap-badge .num {
+    font-family: Georgia, serif; font-size: 24px;
+    color: var(--ink); font-style: italic;
+  }
+  .chap-badge .bar { width: 30px; height: 2px; background: var(--accent); }
+  .chap-badge .name { color: var(--text-mute); letter-spacing: 6px; font-size: 12px; }
+
+  /* 页标题 */
+  h1.page-title {
+    font-size: 32px; color: var(--ink); margin: 0 0 8px;
+    font-weight: 700; line-height: 1.3;
+  }
+  p.page-sub {
+    font-size: 15px; color: var(--text-mute); font-style: italic;
+    margin: 0 0 32px;
+  }
+
+  /* 三栏 grid */
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+  /* 卡片 */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--divider);
+    border-radius: 6px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    position: relative;
+  }
+  .card.dark {
+    background: var(--ink); color: #FFFFFF;
+  }
+  .card.dark .desc { color: #E5DDD0; }
+  .card .top-band {
+    position: absolute; left: 0; right: 0; top: 0; height: 4px;
+    border-radius: 6px 6px 0 0;
+  }
+  .card .top-band.accent { background: var(--accent); }
+  .card .top-band.ink { background: var(--ink); }
+  .card .top-band.green { background: var(--green); }
+
+  .card .card-tag {
+    font-size: 11px; letter-spacing: 2px;
+    color: var(--accent); font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .card .card-tag.green { color: var(--green); }
+  .card .card-tag.soft { color: var(--accent-soft); }
+  .card .card-title {
+    font-size: 22px; color: var(--ink); font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .card.dark .card-title { color: #FFF; }
+  .card .card-divider { width: 24px; height: 1.5px; background: var(--accent); margin: 10px 0; }
+  .card .card-divider.ink { background: var(--ink); }
+  .card .card-divider.green { background: var(--green); }
+  .card .desc { font-size: 14px; color: var(--text-mute); line-height: 1.7; }
+
+  /* KPI 数字 */
+  .kpi {
+    font-family: Georgia, serif; font-weight: 700;
+    font-size: 32px; color: var(--accent);
+    display: inline-block; margin-right: 12px;
+  }
+  .kpi-label {
+    display: inline-block; font-size: 12px;
+    color: var(--text-light); font-style: italic;
+    vertical-align: middle;
+  }
+
+  /* 章节副标(气质同源) */
+  .twin-cards { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 0; align-items: stretch; }
+  .twin-arrow {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent); font-size: 28px;
+  }
+  .quote-banner {
+    margin-top: 32px; padding: 16px;
+    text-align: center; color: var(--accent);
+    font-style: italic; font-weight: 700; font-size: 16px;
+    border-top: 1px dashed var(--divider);
+    border-bottom: 1px dashed var(--divider);
+  }
+
+  /* 三类来源详情 bullets */
+  .card .bullets { font-size: 13px; line-height: 1.9; }
+  .card .bullets b { color: var(--text); margin-right: 4px; }
+  .card.dark .bullets b { color: #FFF; }
+  .card.dark .bullets { color: #D5C8B5; }
+
+  /* 八年节奏图(时间轴) */
+  .timeline-wrap { margin-top: 24px; }
+  .timeline-segs { display: grid; grid-template-columns: 5fr 3fr; gap: 8px; margin-bottom: 16px; }
+  .timeline-seg {
+    padding: 8px; border-radius: 4px;
+    font-weight: 700; text-align: center; letter-spacing: 4px; font-size: 12px;
+  }
+  .timeline-seg.recruit { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+  .timeline-seg.tail { background: var(--green-soft); color: var(--green); border: 1px solid var(--green); }
+  .timeline-axis {
+    display: grid; grid-template-columns: repeat(8, 1fr); gap: 0;
+    border-top: 1.5px solid var(--divider); padding-top: 16px; position: relative;
+  }
+  .timeline-col { text-align: center; padding: 0 4px; }
+  .timeline-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    margin: -23px auto 8px; background: var(--accent);
+  }
+  .timeline-col.tail .timeline-dot { background: var(--green); }
+  .year-num { font-family: Georgia, serif; font-size: 20px; font-weight: 700; color: var(--ink); }
+  .year-add { font-size: 16px; font-weight: 700; color: var(--accent); margin-top: 4px; }
+  .timeline-col.tail .year-add { color: var(--text-light); font-weight: normal; }
+  .year-in { font-size: 13px; color: var(--text); margin-top: 6px; }
+  .year-note { font-size: 10px; color: var(--text-mute); margin-top: 6px; line-height: 1.3; min-height: 24px; }
+
+  /* 表格 */
+  table.data {
+    width: 100%; border-collapse: collapse; margin: 16px 0;
+    background: var(--bg-card); border-radius: 4px; overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  table.data th {
+    background: var(--ink); color: #FFF;
+    padding: 12px; text-align: left;
+    font-size: 13px; font-weight: 700; letter-spacing: 2px;
+  }
+  table.data td {
+    padding: 12px; border-bottom: 1px solid var(--divider);
+    font-size: 13px; color: var(--text);
+  }
+  table.data tr:last-child td { border-bottom: none; }
+  table.data tr.highlight { background: var(--accent-soft); }
+  table.data tr.highlight td { font-weight: 600; }
+  table.data .bar-cell {
+    padding-left: 0;
+  }
+  table.data .bar-cell::before {
+    content: ''; display: inline-block; width: 4px; height: 16px;
+    background: var(--ink); margin-right: 8px; vertical-align: middle;
+  }
+  table.data .bar-cell.green::before { background: var(--green); }
+  table.data .bar-cell.accent::before { background: var(--accent); }
+
+  /* 预算条形图 */
+  .budget-bars { padding: 0; }
+  .budget-row { display: grid; grid-template-columns: 200px 1fr 120px; gap: 12px; align-items: center; margin-bottom: 16px; }
+  .budget-label { font-weight: 700; color: var(--text); font-size: 13px; }
+  .budget-amount { font-size: 12px; font-weight: 700; }
+  .budget-bar-bg { height: 18px; background: var(--bg-soft); border-radius: 2px; position: relative; overflow: hidden; border: 1px solid var(--divider); }
+  .budget-bar { height: 100%; transition: width 1s; }
+
+  /* 总预算条 */
+  .total-bar {
+    background: var(--ink); color: #FFF;
+    border-radius: 4px; padding: 14px 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 20px;
+  }
+  .total-bar .label { color: #E5DDD0; font-size: 14px; }
+  .total-bar .num { font-family: Georgia, serif; font-size: 22px; font-weight: 700; }
+  .total-bar .yearly { color: var(--accent-soft); font-style: italic; font-size: 12px; }
+
+  /* 防火墙横条 */
+  .firewall { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 12px; }
+  .firewall-item {
+    background: var(--green-soft); border: 1px solid var(--green);
+    border-radius: 4px; padding: 10px; text-align: center;
+    font-size: 13px; color: var(--ink); font-weight: 600;
+  }
+
+  /* 风险卡 */
+  .risk-card {
+    background: var(--bg-card); border: 1px solid var(--divider);
+    border-radius: 6px; padding: 14px; position: relative;
+  }
+  .risk-card.high::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); border-radius: 6px 6px 0 0; }
+  .risk-card.med::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--green); border-radius: 6px 6px 0 0; }
+  .risk-tag {
+    display: inline-block; padding: 2px 8px;
+    border-radius: 3px; font-size: 10px; color: #FFF;
+    font-weight: 700; margin-bottom: 8px;
+  }
+  .risk-tag.high { background: var(--accent); }
+  .risk-tag.med { background: var(--green); }
+  .risk-title { font-weight: 700; color: var(--ink); font-size: 14px; margin-bottom: 6px; }
+  .risk-desc { font-size: 12px; color: var(--text-mute); line-height: 1.6; }
+
+  /* 已确认 vs 待拍板 */
+  .conf-todo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .conf-block {
+    background: var(--green-soft); border: 1px solid var(--green);
+    border-radius: 6px; padding: 20px;
+  }
+  .todo-block {
+    background: var(--accent-soft); border: 1px solid var(--accent);
+    border-radius: 6px; padding: 20px;
+  }
+  .conf-block h3 { color: var(--green); margin: 0 0 12px; font-size: 16px; }
+  .todo-block h3 { color: var(--accent); margin: 0 0 12px; font-size: 16px; }
+  .conf-block ul, .todo-block ol {
+    padding: 0 0 0 22px; margin: 0;
+    font-size: 13px; line-height: 1.9; color: var(--text);
+  }
+  .conf-block ul { list-style: none; padding-left: 0; }
+  .conf-block ul li::before { content: '✓ '; color: var(--green); font-weight: 700; }
+
+  /* 段落/列表通用 */
+  .prose p { font-size: 14px; line-height: 1.8; color: var(--text); margin: 12px 0; }
+  .prose p.italic { font-style: italic; color: var(--text-mute); }
+  .prose ul { font-size: 14px; line-height: 1.8; color: var(--text); padding-left: 20px; }
+  .prose ul li { margin-bottom: 6px; }
+  .prose b { color: var(--ink); }
+
+  /* 三原则的列表 */
+  .principles .principle {
+    background: var(--bg-card); border: 1px solid var(--divider);
+    border-left: 4px solid var(--accent);
+    border-radius: 4px; padding: 16px 20px;
+    margin-bottom: 12px; display: flex; gap: 16px; align-items: center;
+  }
+  .principles .principle:nth-child(2) { border-left-color: var(--green); }
+  .principles .principle:nth-child(3) { border-left-color: var(--ink); }
+  .principles .principle .num {
+    font-family: Georgia, serif; font-style: italic; font-size: 28px;
+    color: var(--accent); font-weight: 700; min-width: 50px;
+  }
+  .principles .principle:nth-child(2) .num { color: var(--green); }
+  .principles .principle:nth-child(3) .num { color: var(--ink); }
+  .principles .principle h4 { margin: 0 0 4px; font-size: 16px; color: var(--ink); }
+  .principles .principle p { margin: 0; font-size: 13px; color: var(--text-mute); }
+
+  /* 4 理由网格 */
+  .reasons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .reason {
+    background: var(--bg-card); border: 1px solid var(--divider);
+    border-radius: 6px; padding: 18px;
+  }
+  .reason .r-num {
+    font-family: Georgia, serif; font-style: italic; font-size: 18px;
+    color: var(--accent); margin-right: 8px; font-weight: 700;
+  }
+  .reason h4 { display: inline; font-size: 15px; color: var(--ink); }
+  .reason .r-divider { width: 24px; height: 1.5px; background: var(--accent); margin: 8px 0 10px; }
+  .reason p { margin: 0; font-size: 13px; color: var(--text-mute); line-height: 1.7; }
+
+  /* 双对标:两个 ref-card + 一个 our-card */
+  .ref-twin { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .ref-card {
+    background: var(--bg-soft); border: 1px solid var(--divider);
+    border-radius: 4px; padding: 14px; border-left: 4px solid var(--ink);
+  }
+  .ref-card.green { border-left-color: var(--green); }
+  .ref-card .ref-tag { font-size: 10px; color: var(--text-light); letter-spacing: 1px; margin-bottom: 4px; }
+  .ref-card .ref-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .ref-card .ref-meta { font-size: 12px; color: var(--text-mute); }
+  .our-card {
+    background: var(--ink); color: #FFF;
+    border-radius: 4px; padding: 14px;
+    border-top: 4px solid var(--accent);
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px;
+  }
+  .our-card .our-name { font-weight: 700; font-size: 15px; }
+  .our-card .our-meta { color: var(--accent-soft); font-style: italic; font-size: 12px; }
+
+  /* 节顶部章节标题对齐 */
+  .timeline-summary {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin-top: 28px; text-align: center;
+  }
+  .timeline-summary .s-num { font-family: Georgia, serif; font-weight: 700; font-size: 20px; color: var(--accent); }
+  .timeline-summary .s-label { font-size: 13px; color: var(--text-mute); margin-left: 6px; }
+
+  /* 封面 */
+  .cover {
+    min-height: 70vh;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative; padding-left: 60px;
+  }
+  .cover::before {
+    content: ''; position: absolute; left: 30px; top: 80px; bottom: 80px;
+    width: 4px; background: var(--accent);
+  }
+  .cover::after {
+    content: ''; position: absolute; left: 40px; top: 80px; bottom: 80px;
+    width: 1px; background: var(--green);
+  }
+  .cover .sub-brand { letter-spacing: 8px; font-size: 14px; color: var(--text-mute); margin-bottom: 16px; }
+  .cover .main-title { font-size: 64px; color: var(--ink); font-weight: 700; line-height: 1; margin: 0 0 12px; }
+  .cover .en-title { font-family: Georgia, serif; font-style: italic; font-size: 22px; color: var(--accent); letter-spacing: 4px; margin-bottom: 24px; }
+  .cover .promise { font-size: 18px; color: var(--text-mute); margin-bottom: 8px; }
+  .cover .period { font-family: Georgia, serif; font-style: italic; font-size: 18px; color: var(--text-mute); letter-spacing: 6px; margin-bottom: 50px; }
+  .cover .quote { font-style: italic; font-size: 16px; color: var(--ink); }
+
+  /* 收尾 */
+  .ending {
+    min-height: 50vh;
+    display: grid; grid-template-columns: 1fr 2fr;
+    background: var(--ink); color: #FFF;
+    border-radius: 8px; padding: 60px;
+    margin: 60px 40px;
+  }
+  .ending .left { padding-right: 40px; border-right: 1px solid rgba(255,255,255,0.2); }
+  .ending .left .commit { font-size: 36px; font-weight: 700; }
+  .ending .left .ten { color: var(--accent); }
+  .ending .left .en { font-family: Georgia, serif; font-style: italic; color: var(--accent-soft); margin-top: 16px; letter-spacing: 4px; }
+  .ending .left .yr { font-family: Georgia, serif; font-style: italic; color: #C0B5A4; letter-spacing: 4px; }
+  .ending .right { padding-left: 40px; }
+  .ending .right .prelude { font-size: 18px; color: #C0B5A4; }
+  .ending .right .main { font-size: 28px; color: #FFF; font-weight: 700; margin: 12px 0; }
+  .ending .right .sub-quote { font-size: 16px; color: var(--accent); font-weight: 700; font-style: italic; margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.2); }
+  .ending .right .thanks { font-size: 26px; font-weight: 700; margin-top: 40px; }
+
+  /* 强调标记 */
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; }
+  .pill.accent { background: var(--accent-soft); color: var(--accent); }
+  .pill.green { background: var(--green-soft); color: var(--green); }
+
+  /* 一句话定位 */
+  .one-line {
+    text-align: center; padding: 60px 20px;
+  }
+  .one-line .label { font-size: 14px; letter-spacing: 8px; color: var(--text-mute); margin-bottom: 28px; }
+  .one-line .text { font-size: 28px; color: var(--ink); line-height: 1.6; max-width: 800px; margin: 0 auto; }
+  .one-line .sub-text { font-size: 22px; color: var(--accent); font-style: italic; font-weight: 700; margin-top: 32px; padding-top: 24px; border-top: 2px solid var(--accent); display: inline-block; padding-left: 60px; padding-right: 60px; }
+
+  /* 警告条 */
+  .alert {
+    background: var(--accent-soft); border: 1px solid var(--accent);
+    border-radius: 4px; padding: 14px 18px; font-size: 13px; color: var(--text);
+    margin: 16px 0;
+  }
+  .alert b { color: var(--accent); }
+
+  /* 成绩门槛卡 */
+  .grade-gate {
+    background: var(--green-soft); border: 1px solid var(--green);
+    border-radius: 4px; padding: 14px 18px; font-size: 13px; color: var(--text);
+    margin-bottom: 20px;
+  }
+  .grade-gate b { color: var(--green); }
+  .grade-gate b.ink { color: var(--ink); }
+
+  /* 治理结构 4 卡 */
+  .gov-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .gov-item { background: var(--bg-card); border: 1px solid var(--divider); border-radius: 6px; padding: 16px; }
+  .gov-item h4 { margin: 0 0 6px; font-size: 14px; color: var(--ink); }
+  .gov-item .g-divider { width: 20px; height: 1.5px; margin: 8px 0; background: var(--accent); }
+  .gov-item:nth-child(2) .g-divider { background: var(--green); }
+  .gov-item:nth-child(3) .g-divider { background: var(--ink); }
+  .gov-item:nth-child(4) .g-divider { background: var(--green); }
+  .gov-item p { margin: 0; font-size: 12px; color: var(--text-mute); line-height: 1.6; }
+
+  /* 传播红线 */
+  .reds { display: grid; gap: 8px; }
+  .red-item {
+    background: var(--bg-card); border: 1px solid var(--divider);
+    border-left: 4px solid var(--accent);
+    border-radius: 3px; padding: 10px 14px;
+  }
+  .red-item .t { font-size: 13px; font-weight: 700; color: var(--ink); }
+  .red-item .d { font-size: 11px; color: var(--text-mute); font-style: italic; margin-top: 2px; }
+
+  .tones { list-style: none; padding: 0; }
+  .tones li { margin: 8px 0; padding-left: 20px; position: relative; font-size: 13px; }
+  .tones li::before { content: '✓'; color: var(--green); font-weight: 700; position: absolute; left: 0; }
+
+  /* CEO 长文 8 段 */
+  .seg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 16px; }
+  .seg-item { background: var(--bg-card); border: 1px solid var(--divider); border-radius: 4px; padding: 10px; }
+  .seg-num { font-family: Georgia, serif; font-style: italic; font-size: 13px; color: var(--accent); font-weight: 700; }
+  .seg-name { font-size: 12px; color: var(--text); margin-top: 2px; }
+
+  .ceo-title-pill {
+    background: var(--accent-soft); border: 1px solid var(--accent);
+    padding: 12px 16px; border-radius: 4px; margin-bottom: 12px;
+  }
+  .ceo-title-pill .label { font-size: 10px; color: var(--accent); letter-spacing: 2px; font-weight: 700; }
+  .ceo-title-pill .title { font-size: 16px; color: var(--ink); font-weight: 700; margin-top: 4px; }
+
+  /* 时间线(传播) */
+  .timeline-vert { padding: 0; list-style: none; margin: 16px 0; }
+  .timeline-vert li {
+    padding: 8px 0 8px 24px; position: relative;
+    border-left: 1.5px solid var(--divider); margin-left: 8px;
+  }
+  .timeline-vert li::before {
+    content: ''; width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent); position: absolute; left: -6px; top: 12px;
+  }
+  .timeline-vert .t-time { font-size: 12px; color: var(--accent); font-weight: 700; }
+  .timeline-vert .t-evt { font-size: 13px; color: var(--text); margin-top: 2px; }
+
+  /* 双栏布局 */
+  .split-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+  .split-2 h3 { font-size: 14px; color: var(--ink); margin: 0 0 8px; letter-spacing: 2px; }
+
+  /* 责任声明小字 */
+  .meta-foot { text-align: center; color: var(--text-light); font-size: 11px; margin-top: 40px; padding: 20px; }
+
+  /* 打印 */
+  @media print {
+    .nav { display: none; }
+    section { page-break-inside: avoid; padding: 30px 20px; }
+    .cover, .ending { page-break-after: always; }
+    .edit-fab { display: none !important; }
+  }
+
+  /* ===== EDIT_ONLY_CSS_START ===== 分享版导出时此块会被剥离 */
+  /* 编辑工具栏 */
+  .edit-fab {
+    position: fixed; bottom: 24px; right: 24px;
+    display: flex; flex-direction: column; gap: 8px;
+    z-index: 200;
+  }
+  .edit-fab button {
+    background: var(--bg-card);
+    border: 1px solid var(--divider);
+    border-radius: 24px;
+    padding: 10px 18px;
+    font-family: inherit; font-size: 13px;
+    color: var(--ink); cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+    transition: all .2s;
+    white-space: nowrap;
+  }
+  .edit-fab button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.14);
+  }
+  .edit-fab button.primary {
+    background: var(--ink); color: #FFF;
+    border-color: var(--ink);
+  }
+  .edit-fab button.accent {
+    background: var(--accent); color: #FFF;
+    border-color: var(--accent);
+  }
+  .edit-fab button.green {
+    background: var(--green); color: #FFF;
+    border-color: var(--green);
+  }
+
+  /* 编辑态:文字可点击直接改 */
+  body.editable [contenteditable="true"]:hover {
+    background: #FFF7E5;
+    outline: 1px dashed var(--accent);
+    outline-offset: 2px;
+    cursor: text;
+  }
+  body.editable [contenteditable="true"]:focus {
+    background: #FFF7E5;
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* 阅读模式下,所有 contenteditable 都不响应 */
+  body:not(.editable) [contenteditable="true"] {
+    cursor: default;
+  }
+
+  /* 编辑态顶部提示条 */
+  .edit-hint {
+    display: none;
+    position: fixed; top: 0; left: 0; right: 0;
+    background: var(--accent); color: #FFF;
+    text-align: center; padding: 8px;
+    font-size: 13px; z-index: 150;
+    letter-spacing: 2px;
+  }
+  body.editable .edit-hint { display: block; }
+  body.editable .nav { top: 36px; }
+  /* ===== EDIT_ONLY_CSS_END ===== */
+
+  /* 独立版:导航跳转体验 */
+  html { scroll-behavior: smooth; }
+  section { scroll-margin-top: 64px; }
+  body.editable section { scroll-margin-top: 100px; }
+</style>
+</head>
+<body id="artifacts-component-root-html">
+
+<!-- ============ 顶部导航 ============ -->
+<nav class="nav">
+  <div class="brand">同行计划 · 完整方案 <span class="v">v3.3</span></div>
+  <div class="toc">
+    <a data-target="cover" style="cursor:pointer">封面</a>
+    <a data-target="define" style="cursor:pointer">定位</a>
+    <a data-target="chemistry" style="cursor:pointer">气质</a>
+    <a data-target="tracks" style="cursor:pointer">三类来源</a>
+    <a data-target="why-senior1" style="cursor:pointer">为什么高一</a>
+    <a data-target="benchmarks" style="cursor:pointer">对标</a>
+    <a data-target="principles" style="cursor:pointer">原则</a>
+    <a data-target="structure" style="cursor:pointer">结构</a>
+    <a data-target="timeline" style="cursor:pointer">节奏</a>
+    <a data-target="budget" style="cursor:pointer">预算</a>
+    <a data-target="filter" style="cursor:pointer">筛选</a>
+    <a data-target="tongren" style="cursor:pointer">同仁</a>
+    <a data-target="governance" style="cursor:pointer">治理</a>
+    <a data-target="tone" style="cursor:pointer">传播</a>
+    <a data-target="exec" style="cursor:pointer">执行</a>
+    <a data-target="risk" style="cursor:pointer">风险</a>
+    <a data-target="decision" style="cursor:pointer">决策</a>
+    <a data-target="ending" style="cursor:pointer">收尾</a>
+  </div>
+</nav>
+
+<!-- ============ 页 1 · 封面 ============ -->
+<section id="cover" class="cover">
+  <div class="sub-brand" contenteditable="true" spellcheck="false">奇富科技</div>
+  <h1 class="main-title" contenteditable="true" spellcheck="false">同行计划</h1>
+  <div class="en-title" contenteditable="true" spellcheck="false">Tongxing · Plan</div>
+  <div class="promise" contenteditable="true" spellcheck="false">—— 一份给西部少年的八年承诺</div>
+  <div class="period" contenteditable="true" spellcheck="false">2 0 2 6  —  2 0 3 3</div>
+  <div class="quote" contenteditable="true" spellcheck="false">让他们的潜力,不被贫穷耽误。</div>
+</section>
+
+<!-- ============ 页 2 · 一句话定位 ============ -->
+<section id="define">
+  <div class="chap-badge"><span class="num">01</span><span class="bar"></span><span class="name" contenteditable="true" spellcheck="false">项 目 定 位</span></div>
+  <div class="one-line">
+    <div class="label" contenteditable="true" spellcheck="false">一 句 话 定 位</div>
+    <div class="text" contenteditable="true" spellcheck="false">为西部地区有潜力、有困难的高中生与刚步入大学的少年,提供 4 年的资金支持与系统陪伴。</div>
+    <div class="sub-text" contenteditable="true" spellcheck="false">让他们的潜力,不被贫穷耽误。</div>
+  </div>
+</section>
+
+<!-- ============ 页 3 · 气质同源 ============ -->
+<section id="chemistry">
+  <div class="chap-badge"><span class="num">02</span><span class="bar"></span><span class="name" contenteditable="true" spellcheck="false">气 质 同 源</span></div>
+  <h1 class="page-title" contenteditable="true" spellcheck="false">为什么是奇富做这件事</h1>
+  <p class="page-sub" contenteditable="true" spellcheck="false">从「发现潜力小微」到「发现潜力少年」—— 一脉相承的奇富气质</p>
+
+  <div class="twin-cards">
+    <div class="card">
+      <div class="card-tag" contenteditable="true" spellcheck="false">奇 富 主 业</div>
+      <div class="card-title" contenteditable="true" spellcheck="false">看见潜力小微</div>
+      <div class="card-divider"></div>
+      <div class="desc" contenteditable="true" spellcheck="false">用数据 + 风控能力,<br>帮被传统金融忽视的小微企业,<br>获得发展机会</div>
+    </div>
+    <div class="twin-arrow">→</div>
+    <div class="card dark">
+      <div class="top-band accent"></div>
+      <div class="card-tag soft" contenteditable="true" spellcheck="false">同 行 计 划</div>
+      <div class="card-title" contenteditable="true" spellcheck="false">看见潜力少年</div>
+      <div class="card-divider"></div>
+      <div class="desc" contenteditable="true" spellcheck="false">用同样的眼光和方法,<br>帮被贫穷压住的潜力少年,<br>获得人生机会</div>
+    </div>
+  </div>
+
+  <div class="quote-banner" contenteditable="true" spellcheck="false">我们最擅长的事 —— 看见被忽视的潜力,帮它获得机会。</div>
+</section>
+
+<!-- ============ 页 4 · 三类来源 ============ -->
+<section id="tracks">
+  <div class="chap-badge"><span class="num">03</span><span class="bar"></span><span class="name" contenteditable="true" spellcheck="false">入 选 结 构</span></div>
+  <h1 class="page-title" contenteditable="true" spellcheck="false">三类来源 —— 一个项目,三种角色</h1>
+  <p class="page-sub" contenteditable="true" spellcheck="false">同仁是「根」,在贷用户是「干」,新地域是「枝」 —— 各司其职,共同支撑八年节奏</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="top-band ink"></div>
+      <div class="card-tag" contenteditable="true" spellcheck="false">轨 A · 承 诺 起 点</div>
+      <div style="font-size:12px;color:var(--text-mute);margin-bottom:14px;">对象 · 同仁籍学生</div>
+      <div class="card-title" contenteditable="true" spellcheck="false">我们承诺的<br>起点之根</div>
+      <div class="card-divider ink"></div>
+      <div class="bullets">
+        <div contenteditable="true" spellcheck="false"><b>性质</b>项目起点的承诺锚点</div>
+        <div contenteditable="true" spellcheck="false"><b>出现年份</b>仅 2026 启动年</div>
+        <div contenteditable="true" spellcheck="false"><b>首年入选</b>高考 2 + 高一 2 = 4 人</div>
+        <div contenteditable="true" spellcheck="false"><b>累计</b>4 人 + 食堂奠基</div>
+      </div>
+    </div>
+
+    <div class="card dark">
+      <div class="top-band accent"></div>
+      <div class="card-tag soft" contenteditable="true" spellcheck="false">轨 B · 持 续 主 轨</div>
+      <div style="font-size:12px;color:#D5C8B5;margin-bottom:14px;">对象 · 奇富在贷用户子女</div>
+      <div class="card-title" contenteditable="true" spellcheck="false">业务气质的<br>延伸之干</div>
+      <div class="card-divider"></div>
+      <div class="bullets">
+        <div contenteditable="true" spellcheck="false"><b>性质</b>持续主轨,5 年招生</div>
+        <div contenteditable="true" spellcheck="false"><b>出现年份</b>2026—2030 每年</div>
+        <div contenteditable="true" spellcheck="false"><b>每年规模</b>高一 20 人</div>
+        <div contenteditable="true" spellcheck="false"><b>累计</b>100 人(主体规模)</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="top-band green"></div>
+      <div class="card-tag green" contenteditable="true" spellcheck="false">轨 C · 紧 凑 扩 展</div>
+      <div style="font-size:12px;color:var(--text-mute);margin-bottom:14px;">对象 · 乌兰察布 + 福建福清</div>
+      <div class="card-title" contenteditable="true" spellcheck="false">持续生长的<br>扩展之枝</div>
+      <div class="card-divider green"></div>
+      <div class="bullets">
+        <div contenteditable="true" spellcheck="false"><b>性质</b>紧凑两年扩展锚点</div>
+        <div contenteditable="true" spellcheck="false"><b>出现年份</b>2027 + 2028 连续两年</div>
+        <div contenteditable="true" spellcheck="false"><b>每届入选</b>高考 2 + 高一 2 = 4 人</div>
+        <div contenteditable="true" spellcheck="false"><b>累计</b>8 人 + 2 地普惠</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 页 5 · 为什么高一 ============ -->
+<section id="why-senior1">
+  <div class="chap-badge"><span class="num">04</span><span class="bar"></span><span class="name" contenteditable="true" spellcheck="false">时 点 逻 辑</span></div>
+  <h1 class="page-title" contenteditable="true" spellcheck="false">为什么是「高一为主 + 高考为辅」</h1>
+  <p class="page-sub" contenteditable="true" spellcheck="false">潜力第一次可以被干净识别出来的那一年 —— 高一</p>
+
+  <div class="reasons">
+    <div class="reason">
+      <span class="r-num" contenteditable="true" spellcheck="false">01</span><h4 contenteditable="true" spellcheck="false">中考客观筛选后的稳定平台</h4>
+      <div class="r-divider"></div>
+      <p contenteditable="true" spellcheck="false">考上普高,已经过最客观的能力验证。我们不需要再用复杂评估表去判断「有没有潜力」 —— 中考分数 + 家庭情况就够了。对外解释成本最低。</p>
+    </div>
+    <div class="reason">
+      <span class="r-num" contenteditable="true" spellcheck="false">02</span><h4 contenteditable="true" spellcheck="false">家庭经济压力骤升的真痛点</h4>
+      <div class="r-divider"></div>
+      <p contenteditable="true" spellcheck="false">初中学费低、生活成本可承受;一到高中,学费、住宿、教辅全部跃升。我们在这一刻介入,资助的「不可替代性」最强。</p>
+    </div>
+    <div class="reason">
+      <span class="r-num" contenteditable="true" spellcheck="false">03</span><h4 contenteditable="true" spellcheck="false">还有 4 年可塑期</h4>
+      <div class="r-divider"></div>
+      <p contenteditable="true" spellcheck="false">陪 4 年(高中 3 年 + 大学过渡 1 年),覆盖一个孩子从「确定能继续读书」到「确定能走得更远」的完整弧线。早一年看不清,晚一年来不及。</p>
+    </div>
+    <div class="reason">
+      <span class="r-num" contenteditable="true" spellcheck="false">04</span><h4 contenteditable="true" spellcheck="false">高考辅入口提供传播波峰</h4>
+      <div class="r-divider"></div>
+      <p contenteditable="true" spellcheck="false">若只设高一入口,启动年和扩展年的传播张力都偏弱。增设高考辅入口,让每届都有「考上某某大学的同行者」这种具体叙事。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 页 6 · 双对标 ============ -->
+<section id="benchmarks">
+  <div class="chap-badge"><span class="num">05</span><span class="bar"></span><span class="name" contenteditable="true" spellcheck="false">对 标 与 差 异</span></div>
+  <h1 class="page-title" contenteditable="true" spellcheck="false">对标中信 + 借鉴滴滴 —— 两条成熟路径的整合</h1>
+  <p class="page-sub" contenteditable="true" spellcheck="false">三类来源各对一个成熟样本;我们做差异化的不是路径本身,而是「真陪伴 + 路径整合」</p>
+
+  <div class="ref-twin">
+    <div class="ref-card">
+      <div class="ref-tag" contenteditable="true" spellcheck="false">样本一 · 对应轨 A + 轨 C(学校推荐路径)</div>
+      <div class="ref-name" contenteditable="true" spellcheck="false">中信银行 · 新长城自强班</div>
+      <div class="ref-meta" contenteditable="true" spellcheck="false">2013 至今 12 年 · 77 班 3850 人 · 6000 元/人 · 与中国乡村发展基金会共建</div>
+    </div>
+    <div class="ref-card green">
+      <div class="ref-tag" contenteditable="true" spellcheck="false">样本二 · 对应轨 B(用户子女路径)</div>
+      <div class="ref-name" contenteditable="true" spellcheck="false">滴滴 · 橙果计划</div>
+      <div class="ref-meta" contenteditable="true" spellcheck="false">2018 至今 6 年 · 近 5 万家庭 · 近 1000 人获奖 · 与中国青基会共建</div>
+    </div>
+  </div>
+
+  <div class="our-card">
+    <div class="our-name" contenteditable="true" spellcheck="false">奇富 · 同行计划(双路径整合)</div>
+    <div class="our-meta" contenteditable="true" spellcheck="false">112 人 · 2 万/人 · 三类来源整合 · 一对一长期陪伴 · 8 年(2026—2033)</div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="top-band accent"></div>
+      <span class="pill accent">升 级 1</span>
+      <div style="font-size:18px;color:var(--ink);font-weight:700;margin:10px 0 6px;">双路径整合</div>
+      <span class="kpi" contenteditable="true" spellcheck="false">3 类</span><span class="kpi-label" contenteditable="true" spellcheck="false">国内首例</span>
+      <div class="card-divider"></div>
+      <div class="desc" contenteditable="true" spellcheck="false">中信只走学校推荐;滴滴只走用户子女。我们是首个把「学校推荐 + 用户子女 + 新地域扩展」整合到同一项目的方案</div>
+    </div>
+    <div class="card">
+      <div class="top-band accent"></div>
+      <span class="pill accent">升 级 2</span>
+      <div style="font-size:18px;color:var(--ink);font-weight:700;margin:10px 0 6px;">真陪伴</div>
+      <span class="kpi" contenteditable="true" spellcheck="false">4 年</span><span class="kpi-label" contenteditable="true" spellcheck="false">全链路</span>
+      <div class="card-divider"></div>
+      <div class="desc" contenteditable="true" spellcheck="false">中信靠资金 + 偶发夏令营;滴滴靠奖学金 + 暑期实习。我们配一对一长期导师(同一位至少 3 年),学业 + 心理 + 升学 + 就业全链路</div>
+    </div>
+    <div class="card">
+      <div class="top-band accent"></div>
+      <span class="pill accent">升 级 3</span>
+      <div style="font-size:18px;color:var(--ink);font-weight:700;margin:10px 0 6px;">资助密度</div>
+      <span class="kpi" contenteditable="true" spellcheck="false">2.5×</span><span class="kpi-label" contenteditable="true" spellcheck="false">vs 中信</span>
+      <div class="card-divider"></div>
+      <div class="desc" contenteditable="true" spellcheck="false">中信每人每年 2000 元;我们每人每年 5000 元(4 年累计 2 万)。资金不是核心,但提供更扎实的基础保障</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 页 7 · 三个原则 ============ -->
+<section id="principles">
+  <div class="chap-badge"><span class="num">06</span><span class="bar"></span><span class="name" contenteditable="true" spellcheck="false">三 个 原 则</span></div>
+  <h1 class="page-title" contenteditable="true" spellcheck="false">三个原则</h1>
+  <p class="page-sub" contenteditable="true" spellcheck="false">决定如何投入、如何选择对象、谁来执行 —— 这三件事先讲清楚</p>
+
+  <div class="principles">
+    <div class="principle">
+      <span class="num" contenteditable="true" spellcheck="false">01</span>
+      <div><h4 contenteditable="true" spellcheck="false">长期主义优先于声量</h4><p contenteditable="true" spellcheck="false">承诺每个被选中的孩子都被陪到完(4 年至大学过渡完成)</p></div>
+    </div>
+    <div class="principle">
+      <span class="num" contenteditable="true" spellcheck="false">02</span>
+      <div><h4 contenteditable="true" spellcheck="false">深度陪伴优先于资金强度</h4><p contenteditable="true" spellcheck="false">我们的核心价值是「钱 + 陪伴」的组合 —— 一对一长期导师、学业、心理、升学、就业全链路</p></div>
+    </div>
+    <div class="principle">
+      <span class="num" contenteditable="true" spellcheck="false">03</span>
+      <div><h4 contenteditable="true" spellcheck="false">专业机构优先于自营</h4><p contenteditable="true" spellcheck="false">与 10 年以上经验的公益机构合作,奇富不直接执行筛选和陪伴</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 页 8 · 入选结构 ============ -->
+<section id="structure">
+  <div class="chap-badge"><span class="num">07</span><span class="bar"></span><span class="name" contenteditable="true" spellcheck="false">入 选 结 构</span></div>
+  <h1 class="page-title" contenteditable="true" spellcheck="false">三类来源的入选结构</h1>
+  <p class="page-sub" contenteditable="true" spellcheck="false">所有入选者均按 4 年陪伴标准对待 —— 每人累计 2 万(每年 5000 元)</p>
+
+  <table class="data">
+    <thead>
+      <tr>
+        <th contenteditable="true" spellcheck="false">来源</th><th contenteditable="true" spellcheck="false">入选时点</th><th contenteditable="true" spellcheck="false">出现年份</th>
+        <th contenteditable="true" spellcheck="false">陪伴</th><th contenteditable="true" spellcheck="false">单人累计</th><th contenteditable="true" spellcheck="false">入口方式</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="bar-cell" contenteditable="true" spellcheck="false"><b>轨 A · 同仁</b></td><td contenteditable="true" spellcheck="false">高考 + 高一</td><td contenteditable="true" spellcheck="false">仅 2026</td><td contenteditable="true" spellcheck="false">4 年</td><td style="color:var(--accent);font-weight:700;" contenteditable="true" spellcheck="false">2 万</td><td contenteditable="true" spellcheck="false">学校 + 县教育局推荐</td></tr>
+      <tr class="highlight"><td class="bar-cell accent" contenteditable="true" spellcheck="false"><b>轨 B · 在贷用户</b></td><td contenteditable="true" spellcheck="false">高一</td><td contenteditable="true" spellcheck="false">2026—2030 每年</td><td contenteditable="true" spellcheck="false">4 年</td><td style="color:var(--accent);font-weight:700;" contenteditable="true" spellcheck="false">2 万</td><td contenteditable="true" spellcheck="false">用户主动报名</td></tr>
+      <tr><td class="bar-cell green" contenteditable="true" spellcheck="false"><b>轨 C · 新地域</b></td><td contenteditable="true" spellcheck="false">高考 + 高一</td><td contenteditable="true" spellcheck="false">2027 + 2028</td><td contenteditable="true" spellcheck="false">4 年</td><td style="color:var(--accent);font-weight:700;" contenteditable="true" spellcheck="false">2 万</td><td contenteditable="true" spellcheck="false">学校 + 县教育局推荐</td></tr>
+    </tbody>
+  </table>
+
+  <div style="background:var(--bg-soft);border:1px solid var(--divider);border-radius:4px;padding:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;text-align:center;margin-top:20px;">
+    <div>
+      <div style="font-family:Georgia,serif;font-size:36px;color:var(--accent);font-weight:700;">112</div>
+      <div style="font-size:12px;color:var(--text-mute);">累计核心同行者</div>
+    </div>
+    <div>
+      <div style="font-family:Georgia,serif;font-size:36px;color:var(--accent);font-weight:700;">3</div>
+      <div style="font-size:12px;color:var(--text-mute);">类入选来源</div>
+    </div>
+    <div>
+      <div style="font-family:Georgia,serif;font-size:36px;color:var(--accent);font-weight:700;">3</div>
+      <div style="font-size:12px;color:var(--text-mute);">个普惠层覆盖地域</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 页 9 · 8 年节奏(时间轴) ============ -->
+<section id="timeline">
+  <div class="chap-badge"><span class="num">08</span><span class="bar"></span><span class="name" contenteditable="true" spellcheck="false">项 目 节 奏</span></div>
+  <h1 class="page-title" contenteditable="true" spellcheck="false">8 年节奏:5 年招生 + 3 年陪伴收尾</h1>
+  <p class="page-sub" contenteditable="true" spellcheck="false">每年新增与在册人数 —— 每位同行者陪伴 4 年,2030 最后招生,2033 完整收官</p>
+
+  <div class="timeline-wrap">
+    <div class="timeline-segs">
+      <div class="timeline-seg recruit" contenteditable="true" spellcheck="false">招 生 期 · 2026—2030</div>
+      <div class="timeline-seg tail" contenteditable="true" spellcheck="false">陪 伴 收 尾 期 · 2031—2033</div>
+    </div>
+    <div class="timeline-axis">
+      <div class="timeline-col"><div class="timeline-dot"></div><div class="year-num" contenteditable="true" spellcheck="false">2026</div><div class="year-add" contenteditable="true" spellcheck="false">+24</div><div class="year-in" contenteditable="true" spellcheck="false">在册 24</div><div class="year-note" contenteditable="true" spellcheck="false">启动年 · 同仁奠基</div></div>
+      <div class="timeline-col"><div class="timeline-dot"></div><div class="year-num" contenteditable="true" spellcheck="false">2027</div><div class="year-add" contenteditable="true" spellcheck="false">+24</div><div class="year-in" contenteditable="true" spellcheck="false">在册 48</div><div class="year-note" contenteditable="true" spellcheck="false">扩展年 · 乌兰察布</div></div>
+      <div class="timeline-col"><div class="timeline-dot"></div><div class="year-num" contenteditable="true" spellcheck="false">2028</div><div class="year-add" contenteditable="true" spellcheck="false">+24</div><div class="year-in" contenteditable="true" spellcheck="false">在册 72</div><div class="year-note" contenteditable="true" spellcheck="false">扩展年 · 福建福清</div></div>
+      <div class="timeline-col"><div class="timeline-dot"></div><div class="year-num" contenteditable="true" spellcheck="false">2029</div><div class="year-add" contenteditable="true" spellcheck="false">+20</div><div class="year-in" contenteditable="true" spellcheck="false">在册 92</div><div class="year-note" contenteditable="true" spellcheck="false">主轨年 · 峰值在册</div></div>
+      <div class="timeline-col"><div class="timeline-dot"></div><div class="year-num" contenteditable="true" spellcheck="false">2030</div><div class="year-add" contenteditable="true" spellcheck="false">+20</div><div class="year-in" contenteditable="true" spellcheck="false">在册 88</div><div class="year-note" contenteditable="true" spellcheck="false">招生结束 · 2026 届毕业</div></div>
+      <div class="timeline-col tail"><div class="timeline-dot"></div><div class="year-num" contenteditable="true" spellcheck="false">2031</div><div class="year-add" contenteditable="true" spellcheck="false">—</div><div class="year-in" contenteditable="true" spellcheck="false">在册 64</div><div class="year-note" contenteditable="true" spellcheck="false">2027 届毕业</div></div>
+      <div class="timeline-col tail"><div class="timeline-dot"></div><div class="year-num" contenteditable="true" spellcheck="false">2032</div><div class="year-add" contenteditable="true" spellcheck="false">—</div><div class="year-in" contenteditable="true" spellcheck="false">在册 40</div><div class="year-note" contenteditable="true" spellcheck="false">2028 届毕业</div></div>
+      <div class="timeline-col tail"><div class="timeline-dot"></div><div class="year-num" contenteditable="true" spellcheck="false">2033</div><div class="year-add" contenteditable="true" spellcheck="false">—</div><div class="year-in" contenteditable="true" spellcheck="false">在册 20</div><div class="year-note" contenteditable="true" spellcheck="false">2029 届毕业 · 完整收官</div></div>
+    </div>
+  </div>
+
+  <div class="timeline-summary">
+    <div><span class="s-num" contenteditable="true" spellcheck="false">5 年</span><span class="s-label" contenteditable="true" spellcheck="false">· 招生期(2026—2030)</span></div>
+    <div><span class="s-num" contenteditable="true" spellcheck="false">92 人</span><span class="s-label" contenteditable="true" spellcheck="false">· 峰值在册(2029)</span></div>
+    <div><span class="s-num" contenteditable="true" spellcheck="false">112 人</span><span class="s-label" contenteditable="true" spellcheck="false">· 累计同行者</span></div>
+  </div>
+</section>
+
+<!-- ============ 页 10 · 预算 ============ -->
+<section id="budget">
+  <div class="chap-badge"><span class="num">09</span><span class="bar"></span><span class="name" contenteditable="true" spellcheck="false">预 算</span></div>
+  <h1 class="page-title" contenteditable="true" spellcheck="false">八年总预算:约 484—604 万</h1>
+  <p class="page-sub" contenteditable="true" spellcheck="false">贴合目标区间(355—530 万)上沿;上限微超 70 万(约 14%),可控</p>
+
+  <div class="split-2">
+    <div>
+      <h3 contenteditable="true" spellcheck="false">预 算 构 成</h3>
+      <div class="budget-bars">
+        <div class="budget-row">
+          <div><div class="budget-label" contenteditable="true" spellcheck="false">核心层 · 112 人</div><div class="budget-amount" style="color:var(--accent);" contenteditable="true" spellcheck="false">约 224 万</div></div>
+          <div class="budget-bar-bg"><div class="budget-bar" style="width:92%;background:var(--accent);"></div></div>
+        </div>
+        <div class="budget-row">
+          <div><div class="budget-label" contenteditable="true" spellcheck="false">普惠层 · 3 地</div><div class="budget-amount" style="color:var(--green);" contenteditable="true" spellcheck="false">130—180 万</div></div>
+          <div class="budget-bar-bg"><div class="budget-bar" style="width:64%;background:var(--green);"></div></div>
+        </div>
+        <div class="budget-row">
+          <div><div class="budget-label" contenteditable="true" spellcheck="false">项目运营</div><div class="budget-amount" style="color:var(--ink);" contenteditable="true" spellcheck="false">100—150 万</div></div>
+          <div class="budget-bar-bg"><div class="budget-bar" style="width:44%;background:var(--ink);"></div></div>
+        </div>
+        <div class="budget-row">
+          <div><div class="budget-label" contenteditable="true" spellcheck="false">专项储备金</div><div class="budget-amount" style="color:var(--text-light);" contenteditable="true" spellcheck="false">30—50 万</div></div>
+          <div class="budget-bar-bg"><div class="budget-bar" style="width:16%;background:var(--text-light);"></div></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3 contenteditable="true" spellcheck="false">关 键 数 字</h3>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="card" style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-left:4px solid var(--accent);">
+          <span class="kpi" contenteditable="true" spellcheck="false">2 万</span><span style="color:var(--text-mute);font-size:13px;">单人累计资助(4 年)</span>
+        </div>
+        <div class="card" style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-left:4px solid var(--green);">
+          <span class="kpi" style="color:var(--green);" contenteditable="true" spellcheck="false">2.5 倍</span><span style="color:var(--text-mute);font-size:13px;">vs 中信资助密度</span>
+        </div>
+        <div class="card" style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-left:4px solid var(--ink);">
+          <span class="kpi" style="color:var(--ink);" contenteditable="true" spellcheck="false">112</span><span style="color:var(--text-mute);font-size:13px;">累计核心同行者</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="total-bar">
+    <span class="label" contenteditable="true" spellcheck="false">八年总预算</span>
+    <span class="num" contenteditable="true" spellcheck="false">约 484 — 604 万元</span>
+    <span class="yearly" contenteditable="true" spellcheck="false">年均 60 — 75 万</span>
+  </div>
+</section>
+
+<!-- ============ 页 11 · 筛选 ============ -->
+<section id="filter">
+  <div class="chap-badge"><span class="num">10</span><span class="bar"></span><span class="name" contenteditable="true" spellcheck="false">筛 选 机 制</span></div>
+  <h1 class="page-title" contenteditable="true" spellcheck="false">筛选机制:成绩门槛 + 两表 + 一访谈 + 一票否决</h1>
+  <p class="page-sub" contenteditable="true" spellcheck="false">三类来源共用同一套评估标准;v3.2 新增「成绩 Top 20%」作为入门门槛</p>
+
+  <div class="grade-gate" contenteditable="true" spellcheck="false">
+    <b>第一道:成绩门槛 · </b>高一入口要求 <b class="ink">近 2 次考试综合排名 班级前 20% 或 年级前 30%</b> · 高考入口仅需录取通知书(<i>不另设院校 / 分数线门槛,避免歧视</i>)
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-tag" contenteditable="true" spellcheck="false">家 庭 情 况 评 估 表</div>
+      <div style="font-family:Georgia,serif;font-style:italic;font-size:22px;color:var(--accent);font-weight:700;margin:10px 0;">50 分</div>
+      <div style="font-size:12px;color:var(--text-mute);">经济 · 重大支出 · 家庭结构 · 居住 · 教育支持度</div>
+      <div style="font-size:12px;color:var(--green);font-style:italic;margin-top:8px;">门槛 ≥25 分(过线即可)</div>
+    </div>
+    <div class="card">
+      <div class="card-tag" contenteditable="true" spellcheck="false">学 生 素 养 评 估 表</div>
+      <div style="font-family:Georgia,serif;font-style:italic;font-size:22px;color:var(--accent);font-weight:700;margin:10px 0;">50 分</div>
+      <div style="font-size:12px;color:var(--text-mute);">学习投入 · 好奇心 · 心理韧性 · 责任感 · 表达与思考</div>
+      <div style="font-size:12px;color:var(--green);font-style:italic;margin-top:8px;">门槛 ≥35 分,两表合计 ≥65 分</div>
+    </div>
+    <div class="card">
+      <div class="card-tag" contenteditable="true" spellcheck="false">半 结 构 化 访 谈</div>
+      <div style="font-family:Georgia,serif;font-style:italic;font-size:22px;color:var(--accent);font-weight:700;margin:10px 0;">—</div>
+      <div style="font-size:12px;color:var(--text-mute);">孩子 · 日常 / 兴趣 / 困境 / 未来<br>家长 · 故事 / 期待 / 信任度</div>
+      <div style="font-size:12px;color:var(--green);font-style:italic;margin-top:8px;">评审委员会终评依据之一</div>
+    </div>
+  </div>
+
+  <div class="alert" contenteditable="true" spellcheck="false">
+    ⚠ <b>一票否决项</b> · 「学习投入」和「好奇心与求知欲」任一项 &lt;6 分 → <b>不进核心层</b>
+  </div>
+
+  <div style="font-size:13px;color:var(--green);font-weight:700;letter-spacing:2px;margin-top:24px;">在 贷 用 户 报 名 通 道 的 五 层 防 火 墙</div>
+  <div class="firewall">
+    <div class="firewall-item" contenteditable="true" spellcheck="false">1. 主动报名</div>
+    <div class="firewall-item" contenteditable="true" spellcheck="false">2. 数据隔离</div>
+    <div class="firewall-item" contenteditable="true" spellcheck="false">3. 业务零关联</div>
+    <div class="firewall-item" contenteditable="true" spellcheck="false">4. 状态门槛</div>
+    <div class="firewall-item" contenteditable="true" spellcheck="false">5. 独立评议</div>
+  </div>
+</section>
+
+<!-- ============ 页 12 · 与同仁的关系 ============ -->
+<section id="tongren">
+  <div class="chap-badge"><span class="num">11</span><span class="bar"></span><span class="name" contenteditable="true" spellcheck="false">与 同 仁 的 关 系</span></div>
+  <h1 class="page-title" contenteditable="true" spellcheck="false">同仁:项目的起点之根</h1>
+  <p class="page-sub" contenteditable="true" spellcheck="false">2026 启动年的承诺锚点;后续不再每年招生,但承诺以食堂 + 普惠跟进的方式延续</p>
+
+  <div class="principles">
+    <div class="principle">
+      <span class="num" contenteditable="true" spellcheck="false">①</span>
+      <div><h4 contenteditable="true" spellcheck="false">启动年承诺锚点</h4><p contenteditable="true" spellcheck="false">2026 从同仁籍学生中选 4 人(高考 2 + 高一 2)进入核心层,陪 4 年。这 4 人是项目「承诺感」的具象代表。</p></div>
+    </div>
+    <div class="principle">
+      <span class="num" contenteditable="true" spellcheck="false">②</span>
+      <div><h4 contenteditable="true" spellcheck="false">起点仪式现场</h4><p contenteditable="true" spellcheck="false">6 月食堂奠基日同步启动「同行计划」,把这个时点作为整个长期承诺的公开发令枪。</p></div>
+    </div>
+    <div class="principle">
+      <span class="num" contenteditable="true" spellcheck="false">③</span>
+      <div><h4 contenteditable="true" spellcheck="false">普惠层奠基地</h4><p contenteditable="true" spellcheck="false">食堂建设 40 万已落地;后续 3 年做轻量跟进(文具、阅读角、保暖物资、托管),约 10—20 万。</p></div>
+    </div>
+  </div>
+
+  <div class="quote-banner" contenteditable="true" spellcheck="false">奠基日的承诺:「今天我们为同仁选出第一批 4 个同行者,他们是八年承诺的起点。」</div>
+</section>
+
+<!-- ============ 页 13 · 治理结构 ============ -->
+<section id="governance">
+  <div class="chap-badge"><span class="num">12</span><span class="bar"></span><span class="name" contenteditable="true" spellcheck="false">治 理 结 构</span></div>
+  <h1 class="page-title" contenteditable="true" spellcheck="false">治理结构:专业、独立、可监督</h1>
+  <p class="page-sub" contenteditable="true" spellcheck="false">与公募基金会共建专项基金;独立评审委员会 + 三类顾问把关</p>
+
+  <div class="gov-grid">
+    <div class="gov-item">
+      <h4 contenteditable="true" spellcheck="false">专项慈善基金</h4>
+      <div class="g-divider"></div>
+      <p contenteditable="true" spellcheck="false">与现有持牌公募基金会合作设立(候选:中国乡村发展基金会、中国青少年发展基金会、真爱梦想、上海联劝)</p>
+    </div>
+    <div class="gov-item">
+      <h4 contenteditable="true" spellcheck="false">执行委员会(5—7 人)</h4>
+      <div class="g-divider"></div>
+      <p contenteditable="true" spellcheck="false">奇富代表 1—2 + 合作公益机构代表 1—2 + 外部独立专家 2—3</p>
+    </div>
+    <div class="gov-item">
+      <h4 contenteditable="true" spellcheck="false">独立评审委员会(5 人)</h4>
+      <div class="g-divider"></div>
+      <p contenteditable="true" spellcheck="false">教育专家 2 + 儿童心理学者 1 + 公益机构代表 1 + 本地教育局代表 1;负责一票否决项把关与复议</p>
+    </div>
+    <div class="gov-item">
+      <h4 contenteditable="true" spellcheck="false">伦理顾问 + 数据合规顾问</h4>
+      <div class="g-divider"></div>
+      <p contenteditable="true" spellcheck="false">儿童保护、新闻伦理资深人士 1—2 + 金融数据合规专家 1(把关在贷用户报名通道)</p>
+    </div>
+  </div>
+
+  <p class="page-sub" style="margin-top:24px;text-align:center;color:var(--green);" contenteditable="true" spellcheck="false">建议:公开 RFP 邀请 3—5 家公益机构提案,以确保流程公正、伙伴专业</p>
+</section>
+
+<!-- ============ 页 14 · 传播调性 ============ -->
+<section id="tone">
+  <div class="chap-badge"><span class="num">13</span><span class="bar"></span><span class="name" contenteditable="true" spellcheck="false">传 播 调 性</span></div>
+  <h1 class="page-title" contenteditable="true" spellcheck="false">克制、缓慢、有质感 —— 我们的传播原则</h1>
+  <p class="page-sub" contenteditable="true" spellcheck="false">同行计划不是一个传播项目,它是一个长期慈善项目</p>
+
+  <div class="split-2">
+    <div>
+      <h3 style="color:var(--green);" contenteditable="true" spellcheck="false">总 体 调 性</h3>
+      <ul class="tones">
+        <li contenteditable="true" spellcheck="false">不追求 10 万+ 爆款,追求 3—5 家权威媒体深度好稿</li>
+        <li contenteditable="true" spellcheck="false">第一年内,主语始终是「这件事」而不是「奇富科技」</li>
+        <li contenteditable="true" spellcheck="false">CEO 不出镜与受助孩子合影</li>
+        <li contenteditable="true" spellcheck="false">不做朋友圈刷屏 H5,不做带二维码的捐款转化动作</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="color:var(--accent);" contenteditable="true" spellcheck="false">四 条 传 播 红 线</h3>
+      <div class="reds">
+        <div class="red-item"><div class="t" contenteditable="true" spellcheck="false">不公开孩子身份</div><div class="d" contenteditable="true" spellcheck="false">化名 / 剪影 / 绘画 / 纯文字</div></div>
+        <div class="red-item"><div class="t" contenteditable="true" spellcheck="false">不要求孩子表演感激</div><div class="d" contenteditable="true" spellcheck="false">无领奖、签约、致谢环节</div></div>
+        <div class="red-item"><div class="t" contenteditable="true" spellcheck="false">不打包为公司营销素材</div><div class="d" contenteditable="true" spellcheck="false">主语是孩子,不是奇富</div></div>
+        <div class="red-item"><div class="t" contenteditable="true" spellcheck="false">不渲染苦,而呈现光</div><div class="d" contenteditable="true" spellcheck="false">镜头停留在眼神、书、墙上的画</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote-banner" contenteditable="true" spellcheck="false">它会自然产生传播价值,但传播不能反过来定义它。</div>
+</section>
+
+<!-- ============ 页 15 · 传播执行 ============ -->
+<section id="exec">
+  <div class="chap-badge"><span class="num">14</span><span class="bar"></span><span class="name" contenteditable="true" spellcheck="false">传 播 执 行</span></div>
+  <h1 class="page-title" contenteditable="true" spellcheck="false">首年传播节奏 + CEO 长文</h1>
+  <p class="page-sub" contenteditable="true" spellcheck="false">2026 启动年的传播节奏与 CEO 署名长文骨架</p>
+
+  <div class="split-2">
+    <div>
+      <h3 contenteditable="true" spellcheck="false">首 年 传 播 节 奏(2026)</h3>
+      <ul class="timeline-vert">
+        <li contenteditable="true" spellcheck="false"><div class="t-time" contenteditable="true" spellcheck="false">7月初</div><div class="t-evt" contenteditable="true" spellcheck="false">CEO 署名长文 + 八年承诺书发布</div></li>
+        <li contenteditable="true" spellcheck="false"><div class="t-time" contenteditable="true" spellcheck="false">7月中</div><div class="t-evt" contenteditable="true" spellcheck="false">同仁食堂奠基 + 计划启动</div></li>
+        <li contenteditable="true" spellcheck="false"><div class="t-time" contenteditable="true" spellcheck="false">8月中</div><div class="t-evt" contenteditable="true" spellcheck="false">同仁高考 2 人公布(脱敏)</div></li>
+        <li contenteditable="true" spellcheck="false"><div class="t-time" contenteditable="true" spellcheck="false">8 月底</div><div class="t-evt" contenteditable="true" spellcheck="false">首期 24 人入选完成,公布数量</div></li>
+        <li contenteditable="true" spellcheck="false"><div class="t-time" contenteditable="true" spellcheck="false">9 月开学</div><div class="t-evt" contenteditable="true" spellcheck="false">高一入口启动,导师匹配</div></li>
+        <li contenteditable="true" spellcheck="false"><div class="t-time" contenteditable="true" spellcheck="false">12 月</div><div class="t-evt" contenteditable="true" spellcheck="false">公益机构发布《首期半年观察》</div></li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 contenteditable="true" spellcheck="false">CEO 署 名 长 文 骨 架</h3>
+      <div class="ceo-title-pill">
+        <div class="label" contenteditable="true" spellcheck="false">推 荐 标 题</div>
+        <div class="title" contenteditable="true" spellcheck="false">《从看见潜力小微,到看见潜力少年》</div>
+      </div>
+
+      <div class="seg-grid">
+        <div class="seg-item"><span class="seg-num" contenteditable="true" spellcheck="false">1</span><div class="seg-name" contenteditable="true" spellcheck="false">一个画面</div></div>
+        <div class="seg-item"><span class="seg-num" contenteditable="true" spellcheck="false">2</span><div class="seg-name" contenteditable="true" spellcheck="false">一个观察</div></div>
+        <div class="seg-item"><span class="seg-num" contenteditable="true" spellcheck="false">3</span><div class="seg-name" contenteditable="true" spellcheck="false">一个连接(气质同源)</div></div>
+        <div class="seg-item"><span class="seg-num" contenteditable="true" spellcheck="false">4</span><div class="seg-name" contenteditable="true" spellcheck="false">那本书</div></div>
+        <div class="seg-item"><span class="seg-num" contenteditable="true" spellcheck="false">5</span><div class="seg-name" contenteditable="true" spellcheck="false">一个决定</div></div>
+        <div class="seg-item"><span class="seg-num" contenteditable="true" spellcheck="false">6</span><div class="seg-name" contenteditable="true" spellcheck="false">想清楚的几件事</div></div>
+        <div class="seg-item"><span class="seg-num" contenteditable="true" spellcheck="false">7</span><div class="seg-name" contenteditable="true" spellcheck="false">接受监督</div></div>
+        <div class="seg-item"><span class="seg-num" contenteditable="true" spellcheck="false">8</span><div class="seg-name" contenteditable="true" spellcheck="false">致 2034 年</div></div>
+      </div>
+
+      <p style="font-size:13px;color:var(--accent);font-weight:700;font-style:italic;text-align:center;margin-top:20px;" contenteditable="true" spellcheck="false">我们最擅长的事 —— 看见被忽视的潜力,帮它获得机会。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 页 16 · 风险 ============ -->
+<section id="risk">
+  <div class="chap-badge"><span class="num">15</span><span class="bar"></span><span class="name" contenteditable="true" spellcheck="false">风 险 与 应 对</span></div>
+  <h1 class="page-title" contenteditable="true" spellcheck="false">关键风险与应对</h1>
+  <p class="page-sub" contenteditable="true" spellcheck="false">八类风险,每类有具体应对机制 —— 提前看清,提前布防</p>
+
+  <div class="grid-4">
+    <div class="risk-card high">
+      <span class="risk-tag high" contenteditable="true" spellcheck="false">最高</span>
+      <div class="risk-title" contenteditable="true" spellcheck="false">儿童保护风险</div>
+      <div class="risk-desc" contenteditable="true" spellcheck="false">四条红线 + 伦理审查 + 退出权</div>
+    </div>
+    <div class="risk-card high">
+      <span class="risk-tag high" contenteditable="true" spellcheck="false">重点</span>
+      <div class="risk-title" contenteditable="true" spellcheck="false">在贷用户营销化误读</div>
+      <div class="risk-desc" contenteditable="true" spellcheck="false">五层防火墙 + 数据合规顾问</div>
+    </div>
+    <div class="risk-card high">
+      <span class="risk-tag high" contenteditable="true" spellcheck="false">新增</span>
+      <div class="risk-title" contenteditable="true" spellcheck="false">规模运营压力</div>
+      <div class="risk-desc" contenteditable="true" spellcheck="false">RFP 评估合作机构执行能力 + 内部导师培训</div>
+    </div>
+    <div class="risk-card high">
+      <span class="risk-tag high" contenteditable="true" spellcheck="false">新增</span>
+      <div class="risk-title" contenteditable="true" spellcheck="false">同仁第一年后冷落质疑</div>
+      <div class="risk-desc" contenteditable="true" spellcheck="false">3 年跟进期 + 通道不关 + 叙事清晰</div>
+    </div>
+    <div class="risk-card med">
+      <span class="risk-tag med" contenteditable="true" spellcheck="false">中等</span>
+      <div class="risk-title" contenteditable="true" spellcheck="false">民族宗教敏感性</div>
+      <div class="risk-desc" contenteditable="true" spellcheck="false">聚焦教育公平,新华社青海建立沟通</div>
+    </div>
+    <div class="risk-card med">
+      <span class="risk-tag med" contenteditable="true" spellcheck="false">中等</span>
+      <div class="risk-title" contenteditable="true" spellcheck="false">家庭挪用资金</div>
+      <div class="risk-desc" contenteditable="true" spellcheck="false">学校代管 + 教育服务直付 + 按月发放</div>
+    </div>
+    <div class="risk-card med">
+      <span class="risk-tag med" contenteditable="true" spellcheck="false">中等</span>
+      <div class="risk-title" contenteditable="true" spellcheck="false">作秀质疑</div>
+      <div class="risk-desc" contenteditable="true" spellcheck="false">克制传播 + 透明治理 + 沉默期预期</div>
+    </div>
+    <div class="risk-card med">
+      <span class="risk-tag med" contenteditable="true" spellcheck="false">中等</span>
+      <div class="risk-title" contenteditable="true" spellcheck="false">精英主义质疑</div>
+      <div class="risk-desc" contenteditable="true" spellcheck="false">普惠层守住基本面 + 评潜力非评聪明</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 页 17 · 决策清单 ============ -->
+<section id="decision">
+  <div class="chap-badge"><span class="num">16</span><span class="bar"></span><span class="name" contenteditable="true" spellcheck="false">决 策 清 单</span></div>
+  <h1 class="page-title" contenteditable="true" spellcheck="false">已确认事项 + 待拍板</h1>
+  <p class="page-sub" contenteditable="true" spellcheck="false">v3.3 已确认的事项 / 本次需要老板拍板的关键决策点</p>
+
+  <div class="conf-todo">
+    <div class="conf-block">
+      <h3 contenteditable="true" spellcheck="false">✓ 已 确 认 事 项</h3>
+      <ul>
+        <li contenteditable="true" spellcheck="false">释放潜能定位</li>
+        <li contenteditable="true" spellcheck="false">一票否决(学习投入 + 好奇心)</li>
+        <li contenteditable="true" spellcheck="false">气质同源(潜力小微 → 潜力少年)</li>
+        <li contenteditable="true" spellcheck="false">入口时点(高一为主 + 高考为辅)</li>
+        <li contenteditable="true" spellcheck="false">双对标(中信自强班 + 滴滴橙果)</li>
+        <li contenteditable="true" spellcheck="false">三类来源(同仁 4 + 在贷 100 + 新地域 8)</li>
+        <li contenteditable="true" spellcheck="false">陪伴标准(4 年深陪,2 万 / 人)</li>
+        <li contenteditable="true" spellcheck="false">成绩门槛(班级前 20% 或年级前 30%)</li>
+        <li contenteditable="true" spellcheck="false">项目跨度(8 年,2026—2033)</li>
+        <li contenteditable="true" spellcheck="false">新地域(乌兰察布 2027 + 福建福清 2028)</li>
+      </ul>
+    </div>
+    <div class="todo-block">
+      <h3 contenteditable="true" spellcheck="false">⚠ 待 拍 板 事 项(共 10 项)</h3>
+      <ol>
+        <li contenteditable="true" spellcheck="false">项目命名(同行计划 / 拾光 / 远山 / 如山)</li>
+        <li contenteditable="true" spellcheck="false">年均60-75万的预算区间</li>
+        <li contenteditable="true" spellcheck="false">拓展地区福建福清和乌兰察布</li>
+        <li contenteditable="true" spellcheck="false">资助载体(候选公募基金会)</li>
+        <li contenteditable="true" spellcheck="false">合作公益机构选择方式(RFP)</li>
+        <li contenteditable="true" spellcheck="false">在贷用户通道开放范围(2026 试点)</li>
+        <li contenteditable="true" spellcheck="false">导师来源(以奇富员工志愿者为主)</li>
+        <li contenteditable="true" spellcheck="false">乌兰察布普惠层形式</li>
+        <li contenteditable="true" spellcheck="false">CEO 长文标题(三选一)</li>
+        <li contenteditable="true" spellcheck="false">7月仪式调子 + 第一年传播规模</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 页 18 · 收尾 ============ -->
+<section id="ending" style="padding:40px;">
+  <div class="ending">
+    <div class="left">
+      <div class="commit" contenteditable="true" spellcheck="false">我们承诺<br><span class="ten">八年。</span></div>
+      <div class="en" contenteditable="true" spellcheck="false">Tongxing · Plan</div>
+      <div class="yr" contenteditable="true" spellcheck="false">2026 — 2033</div>
+    </div>
+    <div class="right">
+      <div class="prelude" contenteditable="true" spellcheck="false">我们最擅长的事 ——</div>
+      <div class="main" contenteditable="true" spellcheck="false">看见被忽视的潜力,<br>帮它获得机会。</div>
+      <div class="sub-quote" contenteditable="true" spellcheck="false">让他们的潜力,不被贫穷耽误。</div>
+      <div class="thanks" contenteditable="true" spellcheck="false">谢谢。</div>
+    </div>
+  </div>
+</section>
+
+<div class="meta-foot">
+  同行计划 · 汇报版 v3.3 · 2026 年 6 月 · 奇富科技
+</div>
+
+<!-- ============ 编辑提示条(只在编辑态显示) ============ -->
+<div class="edit-hint">
+  ✏️ 编辑模式 · 点击任意文字直接修改 · 改完记得保存版本
+</div>
+
+<!-- ============ 右下浮动按钮 ============ -->
+<div class="edit-fab">
+  <button id="btn-toggle" class="primary">✏️ 进入编辑模式</button>
+  <button id="btn-save" class="green" style="display:none">💾 保存我的版本</button>
+  <button id="btn-share" class="accent">📤 导出分享版(给老板)</button>
+</div>
+
+<script>
+  // ============ 让所有"可编辑文字"获得 contenteditable ============
+  // 思路:从 nav 和 fab 之外的所有可视区域里,选出文字节点,标记为可编辑
+  // 通过选择常见的 text 容器,避免误把整个 section 都标记成 editable
+  (function markEditable() {
+    const selectors = [
+      'h1', 'h2', 'h3', 'h4', 'h5',
+      'p', 'li', 'td', 'th',
+      '.card-title', '.card-tag', '.desc',
+      '.year-num', '.year-add', '.year-in', '.year-note',
+      '.kpi', '.kpi-label',
+      '.ref-name', '.ref-meta', '.ref-tag',
+      '.our-name', '.our-meta',
+      '.budget-label', '.budget-amount',
+      '.main-title', '.en-title', '.promise', '.period', '.quote', '.sub-brand',
+      '.text', '.sub-text', '.label',
+      '.commit', '.en', '.yr', '.prelude', '.main', '.sub-quote', '.thanks',
+      '.t-time', '.t-evt',
+      '.seg-num', '.seg-name',
+      '.r-num',
+      '.risk-title', '.risk-desc', '.risk-tag',
+      '.firewall-item',
+      '.principle h4', '.principle p', '.principle .num',
+      '.gov-item h4', '.gov-item p',
+      '.red-item .t', '.red-item .d',
+      '.bullets div',
+      '.timeline-seg',
+      '.s-num', '.s-label',
+      '.total-bar .label', '.total-bar .num', '.total-bar .yearly',
+      '.ceo-title-pill .label', '.ceo-title-pill .title',
+      '.grade-gate',
+      '.alert',
+      '.quote-banner',
+      '.page-sub',
+      '.page-title',
+      '.tones li',
+      '.conf-block li', '.todo-block ol li',
+      '.conf-block h3', '.todo-block h3',
+      '.chap-badge .name'
+    ];
+    document.querySelectorAll(selectors.join(',')).forEach(el => {
+      // 不给导航和编辑工具栏内的元素加可编辑
+      if (el.closest('.nav') || el.closest('.edit-fab') || el.closest('.edit-hint')) return;
+      el.setAttribute('contenteditable', 'true');
+      el.setAttribute('spellcheck', 'false');
+    });
+  })();
+
+  // ============ 按钮:切换 编辑 / 阅读 ============
+  const body = document.body;
+  const btnToggle = document.getElementById('btn-toggle');
+  const btnSave = document.getElementById('btn-save');
+
+  btnToggle.addEventListener('click', () => {
+    body.classList.toggle('editable');
+    if (body.classList.contains('editable')) {
+      btnToggle.textContent = '👁 切换到阅读模式';
+      btnSave.style.display = '';
+    } else {
+      btnToggle.textContent = '✏️ 进入编辑模式';
+      btnSave.style.display = 'none';
+    }
+  });
+
+  // ============ 工具:下载文件 ============
+  function downloadHTML(html, filename) {
+    const blob = new Blob(['\ufeff' + html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function ts() {
+    const d = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}`;
+  }
+
+  // ============ 按钮:保存我的版本(带编辑能力,自己留底) ============
+  document.getElementById('btn-save').addEventListener('click', () => {
+    // 暂时退出编辑态,避免把"编辑中"的状态固化
+    const wasEditable = body.classList.contains('editable');
+    body.classList.remove('editable');
+    btnToggle.textContent = '✏️ 进入编辑模式';
+    btnSave.style.display = 'none';
+
+    // 直接复制当前 DOM(保留所有 contenteditable,以便下次打开还能继续编辑)
+    const html = '<!DOCTYPE html>\n<html lang="zh-CN">\n' +
+                 document.documentElement.outerHTML.replace(/^<html[^>]*>/, '') +
+                 '\n';
+
+    downloadHTML(html, `同行计划_v3.3_我的版本_${ts()}.html`);
+
+    if (wasEditable) { body.classList.add('editable'); btnToggle.textContent = '👁 切换到阅读模式'; btnSave.style.display = ''; }
+  });
+
+  // ============ 按钮:导出分享版(纯阅读,无编辑控件) ============
+  document.getElementById('btn-share').addEventListener('click', () => {
+    // 克隆整个 document,然后剥掉编辑相关元素
+    const clone = document.documentElement.cloneNode(true);
+
+    // 1. 移除浮动按钮和提示条
+    clone.querySelectorAll('.edit-fab, .edit-hint').forEach(el => el.remove());
+
+    // 2. 移除所有 contenteditable 属性
+    clone.querySelectorAll('[contenteditable]').forEach(el => {
+      el.removeAttribute('contenteditable');
+      el.removeAttribute('spellcheck');
+    });
+
+    // 3. 移除注入的 script(可编辑相关 JS)
+    clone.querySelectorAll('script').forEach(el => el.remove());
+
+    // 4. 移除 body 的 editable class(若有)
+    const bodyClone = clone.querySelector('body');
+    if (bodyClone) bodyClone.classList.remove('editable');
+
+    // 5. 剥离 style 块里的"编辑专属 CSS"
+    clone.querySelectorAll('style').forEach(styleEl => {
+      styleEl.textContent = styleEl.textContent
+        // 剥离编辑专属 CSS 大块
+        .replace(/\/\*\s*=====\s*EDIT_ONLY_CSS_START\s*=====[\s\S]*?\/\*\s*=====\s*EDIT_ONLY_CSS_END\s*=====\s*\*\//g, '')
+        // 剥离 @media print 里的 .edit-fab 隐藏规则(分享版无按钮,不需要)
+        .replace(/\s*\.edit-fab\s*\{[^}]*\}/g, '');
+    });
+
+    // 分享版无编辑控件,但顶部导航仍要能用:注入一个只负责滚动的小脚本
+    if (bodyClone) {
+      const navScript = document.createElement('script');
+      navScript.textContent = "(function(){document.querySelectorAll('.nav .toc a').forEach(function(a){a.addEventListener('click',function(e){var id=a.getAttribute('data-target');if(!id)return;var t=document.getElementById(id);if(!t)return;e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});});});})();";
+      bodyClone.appendChild(navScript);
+    }
+    const html = '<!DOCTYPE html>\n<html lang="zh-CN">\n' + clone.innerHTML + '\n</html>\n';
+    downloadHTML(html, `同行计划_v3.3_分享版_${ts()}.html`);
+  });
+
+  // ============ 防止离开页面时丢失未保存的编辑 ============
+  let edited = false;
+  document.addEventListener('input', () => { edited = true; }, { capture: true });
+  window.addEventListener('beforeunload', (e) => {
+    if (edited && body.classList.contains('editable')) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
+</script>
+
+
+
+
+
+<script>
+  // ============ 顶部导航:点击平滑滚动(独立版,不依赖 file:// 或父窗口) ============
+  (function(){
+    document.querySelectorAll('.nav .toc a').forEach(function(a){
+      a.addEventListener('click', function(e){
+        var id = a.getAttribute('data-target');
+        if (!id) return;
+        var t = document.getElementById(id);
+        if (!t) return;
+        e.preventDefault();
+        t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  })();
+</script>
+</body></html>
